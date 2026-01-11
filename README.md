@@ -56,7 +56,7 @@ npm install
 
 3. Create a `.env` file with your Supabase configuration:
 ```env
-PORT=3000
+PORT=8000
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
@@ -91,7 +91,9 @@ npm install
 
 3. Create a `.env.local` file in the frontend directory:
 ```env
-NEXT_PUBLIC_API_BASE_URL=https://floodnode-production.up.railway.app/api
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
+# When deployed to Railway, this will automatically use the Railway URL:
+# NEXT_PUBLIC_API_BASE_URL=https://floodnode-production.up.railway.app/api
 # If you want to use Supabase directly in the frontend (optional):
 # NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 # NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key

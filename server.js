@@ -6,7 +6,7 @@ const { createClient } = require('@supabase/supabase-js');
 const { body, validationResult } = require('express-validator');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 // Middleware
 app.use(cors());
