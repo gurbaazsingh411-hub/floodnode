@@ -12,7 +12,7 @@
 
 const char* ssid = "YOUR_WIFI_NAME";
 const char* password = "YOUR_WIFI_PASSWORD";
-const char* serverUrl = "https://your-backend-url/api/sensor-data";
+const char* serverUrl = "https://floodnode-production.up.railway.app/api/sensor-data";
 
 long duration;
 float distanceCM;

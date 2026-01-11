@@ -74,7 +74,7 @@ npm start
 npm run dev
 ```
 
-The backend will start on `http://localhost:3000`
+The backend will be available at your Railway deployment URL (e.g., `https://floodnode-production.up.railway.app`)
 
 ## How to Run the Frontend
 
@@ -91,7 +91,7 @@ npm install
 
 3. Create a `.env.local` file in the frontend directory:
 ```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api
+NEXT_PUBLIC_API_BASE_URL=https://floodnode-production.up.railway.app/api
 # If you want to use Supabase directly in the frontend (optional):
 # NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 # NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -108,7 +108,7 @@ npm run export
 ```
 
 ### Option 2: Single Server (Backend serves frontend)
-The backend server is configured to serve the frontend as static files. Once you build the frontend with `npm run build` and `npm run export`, place the contents of the `frontend/out` directory in your project, and the backend will serve the dashboard automatically at the root URL.
+The backend server is configured to serve the frontend as static files. Once you build the frontend with `npm run build` and `npm run export`, place the contents of the `frontend/out` directory in your project, and the backend will serve the dashboard automatically at the root URL (https://floodnode-production.up.railway.app when deployed to Railway).
 
 ## API Endpoints
 
@@ -129,9 +129,7 @@ const char* password = "YOUR_WIFI_PASSWORD";
 
 2. Update the server URL in `smartnode.c`:
 ```c
-const char* serverUrl = "http://YOUR_SERVER_IP:3000/api/sensor-data";
-// Or if using a public server:
-const char* serverUrl = "http://yourdomain.com/api/sensor-data";
+const char* serverUrl = "https://floodnode-production.up.railway.app/api/sensor-data";
 ```
 
 3. Upload the code to your ESP32
@@ -141,7 +139,7 @@ const char* serverUrl = "http://yourdomain.com/api/sensor-data";
 To receive data from an ESP32 at a different location, you have two options:
 
 ### Option 1: Deploy Backend to Public Server
-Deploy the Node.js backend to a cloud platform (Heroku, AWS, etc.) and update the ESP32's server URL to point to your deployed backend.
+Deploy the Node.js backend to a cloud platform (like Railway, which is recommended) and update the ESP32's server URL to point to your deployed backend. Your deployed URL is https://floodnode-production.up.railway.app
 
 ### Option 2: Use ngrok for Local Testing
 If you want to test with a local backend, use ngrok to create a public tunnel:
