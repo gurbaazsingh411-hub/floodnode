@@ -78,6 +78,7 @@ The backend will start on `http://localhost:3000`
 
 ## How to Run the Frontend
 
+### Option 1: Separate Development Servers
 1. Navigate to the frontend directory:
 ```bash
 cd frontend
@@ -96,12 +97,18 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api
 # NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-4. Start the development server:
+4. Build the frontend for production:
 ```bash
-npm run dev
+npm run build
 ```
 
-The dashboard will be available at `http://localhost:3000`
+5. Export the static files:
+```bash
+npm run export
+```
+
+### Option 2: Single Server (Backend serves frontend)
+The backend server is configured to serve the frontend as static files. Once you build the frontend with `npm run build` and `npm run export`, place the contents of the `frontend/out` directory in your project, and the backend will serve the dashboard automatically at the root URL.
 
 ## API Endpoints
 

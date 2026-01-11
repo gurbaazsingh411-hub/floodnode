@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const { body, validationResult } = require('express-validator');
 
@@ -10,6 +11,14 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
+
+// Serve static files from the frontend build
+app.use(express.static(path.join(__dirname, 'frontend', 'out')));
+
+// Serve React app for any non-API routes
+app.get(/^(?!\/api).*$/, (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'out', 'index.html'));
+});
 
 // Supabase client
 const supabaseUrl = process.env.SUPABASE_URL;
