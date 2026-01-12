@@ -2,8 +2,7 @@
 // YL-83 Rain Sensor + HC-SR04 Ultrasonic
 // Output via Serial Monitor only
 
-#include <WiFi.h>
-#include <HTTPClient.h>
+#include <WiFiClientSecure.h>
 
 #define RAIN_AO 34
 #define RAIN_DO 5
@@ -13,6 +12,7 @@
 const char* ssid = "YOUR_WIFI_NAME";
 const char* password = "YOUR_WIFI_PASSWORD";
 const char* serverUrl = "https://floodnode-production.up.railway.app/api/sensor-data";
+const char* nodeID = "floodnode_01";
 
 long duration;
 float distanceCM;
@@ -42,6 +42,25 @@ void setup() {
 
   Serial.println("\nSMART URBAN FLOOD NODE STARTED");
   delay(2000);
+}
+
+void checkWiFi() {
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("WiFi lost. Reconnecting...");
+    WiFi.disconnect();
+    WiFi.begin(ssid, password);
+    int attempts = 0;
+    while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+      delay(500);
+      Serial.print(".");
+      attempts++;
+    }
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("\nReconnected!");
+    } else {
+      Serial.println("\nReconnection failed.");
+    }
+  }
 }
 
 // -------- Ultrasonic with No-Echo Fix --------
@@ -107,19 +126,27 @@ void loop() {
   Serial.println("==============================");
 
   // Send data to backend if WiFi is connected
+  checkWiFi();
+  
   if (WiFi.status() == WL_CONNECTED) {
-    HTTPClient http;
-    http.begin(serverUrl);
-    http.addHeader("Content-Type", "application/json");
+    WiFiClientSecure *client = new WiFiClientSecure;
+    if (client) {
+      client->setInsecure(); // This allows the connection without checking the certificate chain
+      
+      HTTPClient http;
+      http.begin(*client, serverUrl);
+      http.addHeader("Content-Type", "application/json");
 
-    String payload = "{\"node_id\":\"floodnode_01\",\"rain_analog\":" + String(rainAnalog) + ",\"rain_intensity\":\"" + rainIntensity + "\",\"water_distance_cm\":" + String(distanceCM) + ",\"flood_status\":\"" + floodStatus + "\"}";
+      String payload = "{\"node_id\":\"" + String(nodeID) + "\",\"rain_analog\":" + String(rainAnalog) + ",\"rain_intensity\":\"" + rainIntensity + "\",\"water_distance_cm\":" + String(distanceCM) + ",\"flood_status\":\"" + floodStatus + "\"}";
 
-    int httpResponseCode = http.POST(payload);
+      int httpResponseCode = http.POST(payload);
 
-    Serial.print("HTTP Response: ");
-    Serial.println(httpResponseCode);
+      Serial.print("HTTP Response: ");
+      Serial.println(httpResponseCode);
 
-    http.end();
+      http.end();
+      delete client;
+    }
   }
 
   delay(4000);
